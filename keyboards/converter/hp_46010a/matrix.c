@@ -29,7 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "util.h"
 #include "matrix.h"
 #include "timer.h"
-#include <LUFA/Drivers/Peripheral/SPI.h>
+#include "LUFA/Drivers/Peripheral/SPI.h"
 
 #include "config.h"
 
@@ -92,10 +92,10 @@ void matrix_scan_user(void) {
 // switch, and then into the diode, then into one of the columns into the 
 // matrix. the reset pin can be used to reset the entire counter.
 
-#define RESET _BV(PB5)
-#define SCLK  _BV(PB6)
-#define SDATA _BV(PB7)
-#define LED   _BV(PC7)
+#define RESET _BV(PB6)
+#define SCLK  _BV(PB1)
+#define SDATA _BV(PB3)
+#define LED   _BV(PD6) 
 
 inline
 static
@@ -126,7 +126,7 @@ uint8_t Matrix_ReceiveByte (void) {
     for ( uint8_t bit = 0; bit < MATRIX_COLS; ++bit ) {
         // toggle the clock
         SCLK_increment();
-        temp      = (PINB & SDATA);
+        temp      = (PINB & SDATA) << 4 ;
         received |= temp >> bit ;
     }
 
@@ -158,8 +158,8 @@ void matrix_init () {
     PORTB |= SCLK   ;
 
     // led pin
-    DDRC  |= LED ;
-    PORTC &= ~LED ;
+    DDRD  |= LED ;
+    PORTD &= ~LED ;
 
     matrix_init_quantum();
 
@@ -189,7 +189,7 @@ uint8_t matrix_scan(void)  {
 #else
     // without debouncing we simply just read in the raw matrix
     for ( uint8_t row = 0 ; row < MATRIX_ROWS ; ++row ) {
-        matrix[row] = Matrix_ReceiveByte();
+        matrix[row] = Matrix_ReceiveByte ;
     }
 #endif 
 
@@ -220,7 +220,7 @@ void matrix_print(void)
     print("\nr/c 01234567\n");
 
     for (uint8_t row = 0; row < MATRIX_ROWS; row++) {
-        print_hex8(row); print(": ");
+        phex(row); print(": ");
         print_bin_reverse8(matrix_get_row(row));
         print("\n");
     }
