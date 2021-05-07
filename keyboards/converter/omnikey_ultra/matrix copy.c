@@ -57,7 +57,9 @@ typedef enum {
     _E0,
     _E0_F0,
     _E1,
-    _E1_F0
+    _E1_F0,
+    _12,
+    _12_F0
 } state_t;
 
 uint8_t matrix_scan(void) {
@@ -80,6 +82,8 @@ uint8_t matrix_scan(void) {
         case 0xE1:
             state = _E1;
             break;
+            case 0x12:
+                state = _12;
         default:
             matrix_make(code);
             sent = true;
@@ -139,7 +143,27 @@ uint8_t matrix_scan(void) {
             break;
         }
         break;
-    }
+    case _12:
+            switch (code) {
+            case 0x12:
+                state = _12_F0;
+                break;
+            default:
+                matrix_make(0x200 | code);
+                sent = true;
+                break;
+            }
+            break;
+        case _12_F0:
+        case 0xF0:
+            state = _12_F0;
+            break;
+            default:
+                matrix_break(0x200 | code);
+                sent = true;
+                break;
+            }
+            break;    }
     if (sent) {
         state = NORMAL;
     }
