@@ -54,10 +54,13 @@ void matrix_init(void) {
 typedef enum {
     NORMAL,
     _F0,
+    _F0_12,
     _E0,
     _E0_F0,
     _E1,
-    _E1_F0
+    _E1_F0,
+    _12,                        //new state added for when left shift is pressed
+    _12_F0                      //new state added for when left shift is followed by F0 (which normaly denotes the key release)
 } state_t;
 
 uint8_t matrix_scan(void) {
@@ -80,6 +83,9 @@ uint8_t matrix_scan(void) {
         case 0xE1:
             state = _E1;
             break;
+        case 0x12:
+            state = _12;        //switch state added for left shift
+            break;
         default:
             matrix_make(code);
             sent = true;
@@ -87,8 +93,28 @@ uint8_t matrix_scan(void) {
         }
         break;
     case _F0:
-        matrix_break(code);
-        sent = true;
+        switch (code) {
+            case 0x12:                  // Sent when Num Lock enabled?
+            state = _F0_12;        //switch state added for left shift
+            break;
+        default:
+            matrix_break(0x000 | code);
+            sent = true;
+            break;
+        }
+        break;
+    case _F0_12:                //State for when the key releaseing
+        switch (code) {
+            break;
+        case 0x12:              //If we get a 12, We want to stay in this state
+            break;
+        case 0xF0:              //If we get a F0, We want to stay in this state=
+            break;
+        default:
+            matrix_break(0x200 | code);
+            sent = true;
+            break;
+        }
         break;
     case _E0:
         switch (code) {
@@ -139,6 +165,38 @@ uint8_t matrix_scan(void) {
             break;
         }
         break;
+    case _12:               //this was added when the key is first pressed, when the scan code _12 is seen it brings me to this case, and this part is working
+        switch (code) {
+        case 0xF0:          //This is sent when Key is released F0 12 F0 XX
+            state = _12_F0;  //This is the state that I would like to switch to on key release
+            sent = true;
+            break;
+        case 0x12:              //If we get a 12, We want to stay in this state
+            break;
+        default:
+            matrix_make(0x200 | code);      //when in state _12, the following key is broken and sent +200 to the origonal scan code
+            sent = true;
+            break;
+        }
+        break;
+    case _12_F0:                //State for when the key releaseing
+        switch (code) {
+            break;
+        case 0x05:
+            matrix_break(0x200 | code);
+            sent = true;
+            break;
+        case 0x12:              //If we get a 12, We want to stay in this state
+            break;
+        case 0xF0:              //If we get a F0, We want to stay in this state=
+            break;
+        default:
+            matrix_break(0x200 | code);
+            sent = true;
+            break;
+        }
+        break;
+
     }
     if (sent) {
         state = NORMAL;
