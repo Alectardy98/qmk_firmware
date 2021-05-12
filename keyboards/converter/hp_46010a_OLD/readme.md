@@ -9,7 +9,7 @@ Hardware Supported: HP 46010A, Teensy 2.0
 
 Make example for this keyboard (after setting up your build environment):
 
-    make converter/HP_46010A:default
+    make converter/hp_46010a:default
     
 See the [build environment setup](https://docs.qmk.fm/#/getting_started_build_tools) and the [make instructions](https://docs.qmk.fm/#/getting_started_make_guide) for more information. Brand new to QMK? Start with our [Complete Newbs Guide](https://docs.qmk.fm/#/newbs).
 
@@ -22,7 +22,7 @@ from the bottom of the pcb the pins are arraged as follows:
 
 
       4 5 6
-     3 2 1  
+     1 2 3  
 
 
 connect a six pin modular connector of the 6p6c variaty.
@@ -44,9 +44,9 @@ on the teensy the connection is as follows
 
 teensy | HP 46010A
 ----|-----
-gnd | gnd (6)
+gnd | gnd (4)
 vcc | vcc (3)
 PB0 | reset (1)
 PB1 | clock (5)
-PB3 | data out (4)
+PB3 | data out (6)
 gnd | no connection (2) -- optional

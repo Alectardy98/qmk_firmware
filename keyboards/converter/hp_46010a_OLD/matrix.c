@@ -95,7 +95,7 @@ void matrix_scan_user(void) {
 #define RESET _BV(PB6)
 #define SCLK  _BV(PB1)
 #define SDATA _BV(PB3)
-#define LED   _BV(PD6) 
+#define LED   _BV(PD6)
 
 inline
 static
@@ -126,7 +126,7 @@ uint8_t Matrix_ReceiveByte (void) {
     for ( uint8_t bit = 0; bit < MATRIX_COLS; ++bit ) {
         // toggle the clock
         SCLK_increment();
-        temp      = (PINB & SDATA) << 4 ;
+        temp      = (PINB & SDATA);
         received |= temp >> bit ;
     }
 
@@ -158,8 +158,8 @@ void matrix_init () {
     PORTB |= SCLK   ;
 
     // led pin
-    DDRD  |= LED ;
-    PORTD &= ~LED ;
+    DDRC  |= LED ;
+    PORTC &= ~LED ;
 
     matrix_init_quantum();
 
@@ -189,7 +189,7 @@ uint8_t matrix_scan(void)  {
 #else
     // without debouncing we simply just read in the raw matrix
     for ( uint8_t row = 0 ; row < MATRIX_ROWS ; ++row ) {
-        matrix[row] = Matrix_ReceiveByte ;
+        matrix[row] = Matrix_ReceiveByte();
     }
 #endif 
 
