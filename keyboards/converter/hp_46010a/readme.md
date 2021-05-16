@@ -46,7 +46,7 @@ teensy | HP 46010A
 ----|-----
 gnd | gnd (6)
 vcc | vcc (3)
-PB0 | reset (1)
+PB6 | reset (1)
 PB1 | clock (5)
 PB3 | data out (4)
 gnd | no connection (2) -- optional
