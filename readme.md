@@ -17,16 +17,9 @@ The docs are powered by [Docsify](https://docsify.js.org/) and hosted on [GitHub
 
 You can request changes by making a fork and opening a [pull request](https://github.com/qmk/qmk_firmware/pulls), or by clicking the "Edit this page" link at the bottom of any page.
 
-## Supported Keyboards
+## Personal Fork
 
-* [Planck](/keyboards/planck/)
-* [Preonic](/keyboards/preonic/)
-* [ErgoDox EZ](/keyboards/ergodox_ez/)
-* [Clueboard](/keyboards/clueboard/)
-* [Cluepad](/keyboards/clueboard/17/)
-* [Atreus](/keyboards/atreus/)
-
-The project also includes community support for [lots of other keyboards](/keyboards/).
+This is my personal fork used for testing purposes. Please use the master fork for a more stable experence
 
 ## Maintainers
 
